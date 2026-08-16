@@ -1,0 +1,16 @@
+{
+  "circuit_name": "LED with current-limiting resistor",
+  "difficulty": "beginner",
+  "description": "A basic series circuit: battery powers a resistor, which limits current into an LED, returning to battery negative.",
+  "components": [
+    {"name": "BAT1", "type": "Battery", "voltage": 5.0},
+    {"name": "R1", "type": "Resistor", "resistance_ohms": 220},
+    {"name": "LED1", "type": "LED"}
+  ],
+  "expected_nets": [
+    {"pins": [["BAT1", "positive"], ["R1", "pin1"]]},
+    {"pins": [["R1", "pin2"], ["LED1", "anode"]]},
+    {"pins": [["LED1", "cathode"], ["BAT1", "negative"]]}
+  ],
+  "explanation": "Current flows from the battery's positive terminal through the resistor (which limits current to a safe level), through the LED in its forward direction (anode to cathode), and back to the battery's negative terminal."
+}

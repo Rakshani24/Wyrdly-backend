@@ -1,0 +1,16 @@
+{
+  "circuit_name": "Voltage divider",
+  "difficulty": "beginner",
+  "description": "Two resistors in series across a battery. The midpoint between them provides a fraction of the supply voltage.",
+  "components": [
+    {"name": "BAT1", "type": "Battery", "voltage": 9.0},
+    {"name": "R1", "type": "Resistor", "resistance_ohms": 1000},
+    {"name": "R2", "type": "Resistor", "resistance_ohms": 1000}
+  ],
+  "expected_nets": [
+    {"pins": [["BAT1", "positive"], ["R1", "pin1"]]},
+    {"pins": [["R1", "pin2"], ["R2", "pin1"]]},
+    {"pins": [["R2", "pin2"], ["BAT1", "negative"]]}
+  ],
+  "explanation": "Current flows from battery+ through R1, then R2, back to battery-. The node between R1 and R2 sits at a voltage determined by the ratio of the two resistances."
+}

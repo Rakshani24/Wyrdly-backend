@@ -1,0 +1,18 @@
+{
+  "circuit_name": "Switch-Controlled LED",
+  "difficulty": "beginner",
+  "description": "A switch in series with a resistor and LED. Closing the switch completes the circuit and lights the LED.",
+  "components": [
+    {"name": "BAT1", "type": "Battery", "voltage": 5.0},
+    {"name": "SW1", "type": "Switch"},
+    {"name": "R1", "type": "Resistor", "resistance_ohms": 220},
+    {"name": "LED1", "type": "LED"}
+  ],
+  "expected_nets": [
+    {"pins": [["BAT1", "positive"], ["SW1", "pin1"]]},
+    {"pins": [["SW1", "pin2"], ["R1", "pin1"]]},
+    {"pins": [["R1", "pin2"], ["LED1", "anode"]]},
+    {"pins": [["LED1", "cathode"], ["BAT1", "negative"]]}
+  ],
+  "explanation": "The switch acts as a gate in the circuit. When closed, current flows from the battery through the switch, resistor, and LED. When open, the circuit is broken and the LED stays off."
+}
