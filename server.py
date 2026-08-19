@@ -24,7 +24,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://wyrdly-frontend.vercel.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -82,7 +82,7 @@ def explain_faults(request: ExplainRequest):
 
     try:
         response = genai_client.models.generate_content(
-            model="gemini-flash-latest",
+            model="gemini-2.5-flash",
             contents=full_prompt,
         )
     except Exception as exc:
@@ -109,7 +109,7 @@ async def parse_schematic(file: UploadFile = File(...)):
 
     try:
         response = genai_client.models.generate_content(
-    model="gemini-flash-latest",
+    model="gemini-2.5-flash",
     contents=[
         types.Part.from_bytes(data=image_bytes, mime_type=file.content_type),
         prompt
