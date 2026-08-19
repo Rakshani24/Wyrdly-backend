@@ -13,6 +13,27 @@ load_dotenv()
 genai_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 for m in genai_client.models.list():
     print(m.name)
+def generate_with_fallback(contents):
+    """
+    Tries a few models in order, since Gemini's free tier models
+    frequently return 503 (high demand). Falls back automatically
+    instead of failing the whole request.
+    """
+    models_to_try = ["gemini-flash-latest", "gemini-2.5-flash-lite", "gemini-flash-lite-latest"]
+    last_error = None
+
+    for model_name in models_to_try:
+        try:
+            response = genai_client.models.generate_content(
+                model=model_name,
+                contents=contents,
+            )
+            return response
+        except Exception as exc:
+            last_error = exc
+            continue
+
+    raise last_error    
 
 from model import Breadboard
 from wiring import NetlistBuilder
@@ -81,10 +102,8 @@ def explain_faults(request: ExplainRequest):
     full_prompt = f"{system_prompt}\n\nHere are the detected faults:\n{fault_summary}"
 
     try:
-        response = genai_client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=full_prompt,
-        )
+        response = generate_with_fallback(full_prompt)
+        
     except Exception as exc:
         raise HTTPException(
             status_code=502,
@@ -108,13 +127,10 @@ async def parse_schematic(file: UploadFile = File(...)):
     )
 
     try:
-        response = genai_client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=[
-        types.Part.from_bytes(data=image_bytes, mime_type=file.content_type),
-        prompt
-    ]
-)
+        response = generate_with_fallback([
+            types.Part.from_bytes(data=image_bytes, mime_type=file.content_type),
+            prompt
+        ])
         text = response.text.strip()
         if text.startswith("```"):
             text = text.split("```")[1].replace("json", "", 1).strip()
